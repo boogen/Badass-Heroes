@@ -11,6 +11,7 @@
 #include "BuildSpell.h"
 #include "MindControlSpell.h"
 #include "ChangePlayerEvent.h"
+#include "TeleportSpell.h"
 
 Game::Game(Context& c, char* mapfile): m_context(c),
 				       m_level(m_context),
@@ -47,6 +48,11 @@ Game::Game(Context& c, char* mapfile): m_context(c),
   m_mind_control_spell->setPosition(138, 350);
   m_mind_control_spell->setParent(&m_hud);
   m_mind_control_spell->setZ(1.0f);
+  
+  m_teleport_spell = new Button(m_context, "teleportspell1.png", "teleportspell1.png", "teleportspell2.png", "");
+  m_teleport_spell->setPosition(10, 414);
+  m_teleport_spell->setParent(&m_hud);
+  m_teleport_spell->setZ(1.0f);
 
   m_level.loadFromFile(mapfile);
   m_level.spawnNpcs(50);
@@ -281,7 +287,9 @@ void Game::doGUI() {
     m_heroes.at(m_current_player)->spell(new MindControlSpell(m_context));
   }
 
-
+  if (button(m_teleport_spell)) {
+    m_heroes.at(m_current_player)->spell(new TeleportSpell(m_context));
+  }
 
   if (m_context.uistate.mousedown == 0) {
     m_context.uistate.active = 0;

@@ -29,6 +29,7 @@ class SpellType {
   static const std::string magic_bullet;
   static const std::string build_wall;
   static const std::string mind_control;
+  static const std::string teleport;
 };
 
 namespace State {

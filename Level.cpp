@@ -239,6 +239,9 @@ void Level::onSpellCasted(GameEventPointer event, EventDispatcher* dispatcher) {
       }
     }
   }
+  else if (e->type() == SpellType::teleport) {
+    m_current_player->setPosition(e->x() * m_context.TILE_SIZE, e->y() * m_context.TILE_SIZE);
+  }
 }
 
 void Level::onChestOpened(GameEventPointer e, EventDispatcher* dispatcher) {
