@@ -20,6 +20,8 @@ class Character : public DisplayObject {
   void damage(int value);
   ~Character();
   int health() const;
+
+  void setDrunk(bool);
  protected:
   std::deque<point>* findPath(int x, int y);
  protected:
@@ -33,6 +35,7 @@ class Character : public DisplayObject {
   void notifications(float dt);
  private:
   std::vector<std::pair<Sprite*, Textfield*> > m_notifications;
+  bool m_drunk;
 };
 
 #endif

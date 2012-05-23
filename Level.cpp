@@ -242,6 +242,19 @@ void Level::onSpellCasted(GameEventPointer event, EventDispatcher* dispatcher) {
   else if (e->type() == SpellType::teleport) {
     m_current_player->setPosition(e->x() * m_context.TILE_SIZE, e->y() * m_context.TILE_SIZE);
   }
+  else if (e->type() == SpellType::drunk) {
+    for (int i = 0; i < m_npcs.size(); ++i) {
+      if (m_npcs.at(i)->row() == e->y() && m_npcs.at(i)->col() == e->x()) {
+	m_npcs.at(i)->setDrunk(true);
+      }
+    }
+
+    for (int i = 0; i < m_players->size(); ++i) {
+      if (m_players->at(i)->row() == e->y() && m_players->at(i)->col() == e->x()) {
+	m_players->at(i)->setDrunk(true);
+      }
+    }
+  }
 }
 
 void Level::onChestOpened(GameEventPointer e, EventDispatcher* dispatcher) {

@@ -2,21 +2,58 @@
 #include <cmath>
 #include "Utils.h"
 #include <sstream>
+#include <cstdlib>
+#include <iostream>
 
 Character::Character(Context const& c, int health, std::vector<std::vector<int> > const& map): DisplayObject(c), 
 											       m_health(health),
 											       m_map(map),
-											       m_path(NULL){
+											       m_path(NULL),
+											       m_drunk(false) {
 }
 
 int Character::health() const {
   return m_health;
 }
 
+void Character::setDrunk(bool value) {
+  m_drunk = value;
+}
+
 void Character::onAction(Action action) {
 
   std::deque<point>* path = findPath(action.dest().second, action.dest().first);
-  if (path->size() > 0) {
+
+  if (m_drunk && path->size()) {
+    
+    point diff(0, 0);
+    if (path->at(0).first * m_context.TILE_SIZE != m_x) {
+      diff.first = (path->at(0).first * m_context.TILE_SIZE - m_x) / fabs(path->at(0).first * m_context.TILE_SIZE - m_x);
+    }
+    if (path->at(0).second * m_context.TILE_SIZE != m_y) {
+      diff.second = (path->at(0).second * m_context.TILE_SIZE - m_y) / fabs(path->at(0).second * m_context.TILE_SIZE - m_y);
+    }
+    point* p = NULL;
+    if (diff.first != 0) {
+      p = new point(col() - diff.first, row());
+    }
+    else if (diff.second != 0) {
+      p = new point(col(), row() - diff.second);
+    }
+
+    if (p != NULL && m_map.at(p->second).at(p->first) == 0) {
+      path = findPath(p->first, p->second);
+      delete p;
+    }
+    else {
+      delete path;
+      path = NULL;
+    }
+
+  }
+  
+
+  if (path != NULL && path->size() > 0) {
     m_actions.clear();
     
     if (m_path) {

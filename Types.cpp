@@ -18,3 +18,4 @@ const std::string SpellType::magic_bullet = "magic_bullet";
 const std::string SpellType::build_wall = "build_wall";
 const std::string SpellType::mind_control = "mind_control";
 const std::string SpellType::teleport = "teleport";
+const std::string SpellType::drunk = "drunk";

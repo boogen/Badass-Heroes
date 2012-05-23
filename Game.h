@@ -43,6 +43,7 @@ class Game: public EventDispatcher, public IEventReceiver {
   Button* m_build_spell;
   Button* m_mind_control_spell;
   Button* m_teleport_spell;
+  Button* m_drunk_spell;
   int m_current_player;
   std::string m_fps_text;
   int m_fps_counter;
