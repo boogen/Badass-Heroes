@@ -368,6 +368,8 @@ void Level::npcTurn() {
     }
   }
 
+  dispatchEvent(new GameEvent(ET::npc_turn_ended), this);
+
 }
 
 void Level::npcCame(GameEventPointer event, EventDispatcher* dispatcher) {
