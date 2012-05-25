@@ -5,6 +5,7 @@
 #include "AnimatedSprite.h"
 #include "Event.h"
 #include "Figure.h"
+#include "Sprite.h"
 
 class Hud : public DisplayObject {
  public:
@@ -13,7 +14,8 @@ class Hud : public DisplayObject {
   void onEvent(const Event& e);
   void setAvatar(Figure* avatar);
  private:
-  Figure* m_current_avatar;
+  Sprite* m_background;
+  Figure* m_current_avatar;  
 };
 
 #endif

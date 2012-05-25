@@ -29,34 +29,34 @@ Game::Game(Context& c, char* mapfile): m_context(c),
 				       m_fps_time(0.f) {
   
   srand(time(NULL));
-  m_hud.setPosition(m_context.screen_width - 250, 0);
+  m_hud.setPosition(m_context.screen_width - 200, 0);
   m_end_turn = new Button(m_context, "inactive.png", "active.png", "inactive.png", "End turn");
-  m_end_turn->setPosition(10, 500);
+  m_end_turn->setPosition(7, 483);
   m_end_turn->setParent(&m_hud);
   m_end_turn->setZ(1.0f);
 
   m_spell = new Button(m_context, "spell1.png", "spell1.png", "spell2.png", "");
-  m_spell->setPosition(10, 350);
+  m_spell->setPosition(18, 258);
   m_spell->setParent(&m_hud);
   m_spell->setZ(1.0f);
 
   m_build_spell = new Button(m_context, "buildspell1.png", "buildspell1.png", "buildspell2.png", "");
-  m_build_spell->setPosition(74, 350);
+  m_build_spell->setPosition(72, 258);
   m_build_spell->setParent(&m_hud);
   m_build_spell->setZ(1.0f);
 
   m_mind_control_spell = new Button(m_context, "yoda1.png", "yoda1.png", "yoda2.png", "");
-  m_mind_control_spell->setPosition(138, 350);
+  m_mind_control_spell->setPosition(126, 258);
   m_mind_control_spell->setParent(&m_hud);
   m_mind_control_spell->setZ(1.0f);
   
   m_teleport_spell = new Button(m_context, "teleportspell1.png", "teleportspell1.png", "teleportspell2.png", "");
-  m_teleport_spell->setPosition(10, 414);
+  m_teleport_spell->setPosition(18, 308);
   m_teleport_spell->setParent(&m_hud);
   m_teleport_spell->setZ(1.0f);
 
   m_drunk_spell = new Button(m_context, "drunkspell1.png", "drunkspell1.png", "drunkspell2.png", "");
-  m_drunk_spell->setPosition(74, 414);
+  m_drunk_spell->setPosition(72, 308);
   m_drunk_spell->setParent(&m_hud);
   m_drunk_spell->setZ(1.0f);
 

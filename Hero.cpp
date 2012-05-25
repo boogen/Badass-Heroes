@@ -22,7 +22,7 @@ Hero::Hero(Context const& c, std::vector<std::vector<int> > const& map, std::str
   m_figure = new Figure(c, headgear, breastplate, pants);
   m_avatar = new Figure(*m_figure);
   m_avatar->setDirection(Animations::down);
-  m_avatar->setScale(8.0f);
+  m_avatar->setScale(4.0f);
   addChild(m_figure);
   m_render_behaviour = new ContainerRenderBehaviour(m_children);
   m_size_behaviour = new ContainerSizeBehaviour(m_children);

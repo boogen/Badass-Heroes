@@ -25,7 +25,7 @@ Level::Level(Context const& c): DisplayObject(c),
   m_render_behaviour = new ContainerRenderBehaviour(m_children);
   m_size_behaviour = new ContainerSizeBehaviour(m_children);
 
-  setBounds(new Rectangle(0, 0, m_context.screen_width - 250, m_context.screen_height));
+  setBounds(new Rectangle(0, 0, m_context.screen_width - 200, m_context.screen_height));
 }
 
 void Level::loadFromFile(std::string filename) {
@@ -319,7 +319,7 @@ void Level::onEvent(const Event& e) {
     }
   }
   else if (e.event_type == EventType::Resize) {
-    setBounds(new Rectangle(0, 0, m_context.screen_width - 250, m_context.screen_height));
+    setBounds(new Rectangle(0, 0, m_context.screen_width - 200, m_context.screen_height));
   }
   else if (e.event_type == EventType::MouseDown) {
     int x = floor((e.mouse_data.x - this->x()) / m_context.TILE_SIZE);
