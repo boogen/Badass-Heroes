@@ -24,7 +24,8 @@ Tile::Tile(Context const& c, std::string textureName, std::string shadowTexture,
 																								   m_memory_right(0), 
 																								   m_memory_down(0), 
 																														   m_memory_left(0),
-																														   m_scents(scents) {
+																														   m_scents(scents), 
+																														   m_bones(NULL) {
 
   if (shadowTexture.size()) {
     m_shadow = new Sprite(m_context, shadowTexture);
@@ -137,6 +138,13 @@ void Tile::rebuild() {
   m_memory_down = map_down();
   m_memory_left = map_left();
 
+}
+
+void Tile::addBones() {
+  m_bones = new Sprite(m_context, "bones.png");
+  m_bones->setScale(2);
+  m_bones->setParent(this);
+  
 }
 
 void Tile::openChest() {
@@ -295,6 +303,9 @@ void Tile::render() {
   }
   if (m_dead) {
     m_dead->render();
+  }
+  if (m_bones) {
+    m_bones->render();
   }
   if (m_chest) {
     m_chest->render();

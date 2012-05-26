@@ -105,7 +105,7 @@ void Level::spawnNpcs(int count) {
   std::set<std::pair<int, int> > marked;
   for (int i = 0; i < count; ++i) {
     Npc* npc = new Npc(m_context, 10, m_data);
-    
+    npc->addEventListener(ET::dead, this, static_cast<Listener>(&Level::onNpcDeath));
     int row = 0;
     int col = 0;
     do {
@@ -120,6 +120,20 @@ void Level::spawnNpcs(int count) {
     addChild(npc);
   }
   
+}
+
+void Level::onNpcDeath(GameEventPointer e, EventDispatcher* dispatcher) {
+  Npc* npc = dynamic_cast<Npc*>(dispatcher);
+  if (npc) {
+    for (int i = 0; i < m_tiles.size(); ++i) {
+      if (m_tiles.at(i)->row() == npc->row() && m_tiles.at(i)->col() == npc->col()) {
+	m_tiles.at(i)->addBones();
+      }
+    }
+    if (npc->parent()) {
+      npc->parent()->removeChild(npc);
+    }
+  }
 }
 
 std::vector<std::vector<int> > const& Level::getData() {

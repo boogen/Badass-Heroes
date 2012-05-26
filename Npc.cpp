@@ -47,9 +47,7 @@ void Npc::die() {
 }
 
 void Npc::onDeath(GameEventPointer e, EventDispatcher* dispatcher) {
-  if (parent()) {
-    parent()->removeChild(this);
-  }
+  dispatchEvent(new GameEvent(ET::dead), this);
 }
 
 

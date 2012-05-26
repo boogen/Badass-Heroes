@@ -22,6 +22,7 @@ class ET {
   static const std::string npc_turn_ended;
   static const std::string came;
   static const std::string change_player;
+  static const std::string dead;
 };
 
 class SpellType {

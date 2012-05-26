@@ -36,6 +36,7 @@ class Level : public DisplayObject  {
   void resetCamera();
   void computeScents();
   void npcCame(GameEventPointer, EventDispatcher* dispatcher);
+  void onNpcDeath(GameEventPointer e, EventDispatcher* dispatcher);
  private:
   std::vector<std::vector<int> > m_data;
   std::vector<std::vector<int> > m_destroyed;

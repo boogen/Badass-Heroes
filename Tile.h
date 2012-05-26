@@ -23,6 +23,7 @@ class Tile : public Sprite {
   Action action();
   void openChest();
   void rebuild();
+  void addBones();
  private:
   bool up();
   bool right();
@@ -63,6 +64,7 @@ class Tile : public Sprite {
   int m_memory_down;
   int m_memory_left;
   std::vector<std::vector<float> > const& m_scents;
+  Sprite* m_bones;
 };
 
 #endif
