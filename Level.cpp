@@ -103,8 +103,10 @@ void Level::setPlayers(std::vector<Hero*>* players) {
 void Level::spawnNpcs(int count) {
   srand ( time(NULL) );
   std::set<std::pair<int, int> > marked;
+  std::string images[] = {"zombie", "spider"};
   for (int i = 0; i < count; ++i) {
-    Npc* npc = new Npc(m_context, 10, m_data);
+    int index = rand() % 2;
+    Npc* npc = new Npc(m_context, images[index], 10, m_data);
     npc->addEventListener(ET::dead, this, static_cast<Listener>(&Level::onNpcDeath));
     int row = 0;
     int col = 0;

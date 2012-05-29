@@ -9,7 +9,7 @@
 
 class Npc : public Character {
  public:
-  Npc(Context const& c, int health, std::vector<std::vector<int> > const& map);
+  Npc(Context const& c, std::string image, int health, std::vector<std::vector<int> > const& map);
   virtual void animate(const std::string& dir, int count = -1);
   virtual void stop();
   void die();

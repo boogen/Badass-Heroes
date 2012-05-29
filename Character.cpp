@@ -124,6 +124,7 @@ void Character::tick(float dt) {
       else {
 	m_actions.erase(m_actions.begin());
 	dispatchEvent(new GameEvent(ET::came), this);
+	animate(Animations::idle);
       }
     }
   }

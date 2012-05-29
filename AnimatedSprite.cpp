@@ -50,6 +50,10 @@ void AnimatedSprite::animate(std::string dir, int count) {
       m_direction = dir;
     }
   }
+  else if (dir == Animations::idle && m_frames.find(Animations::down) != m_frames.end()) {
+    stop();
+    setDirection(Animations::down);
+  }
   else {
     std::ostringstream msg;
     msg << "Tried to run animation " << dir << ", but there's no such animation in " << m_spritesheet << ".";

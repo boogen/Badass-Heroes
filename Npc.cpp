@@ -6,8 +6,8 @@
 #include <cmath>
 #include "Utils.h"
 
-Npc::Npc(Context const& c, int health, std::vector<std::vector<int> > const& map): Character(c, health, map) {
-  DisplayObject* sprite = new AnimatedSprite(c, "zombie");
+Npc::Npc(Context const& c, std::string image, int health, std::vector<std::vector<int> > const& map): Character(c, health, map) {
+  DisplayObject* sprite = new AnimatedSprite(c, image);
   addChild(sprite);
   
   m_render_behaviour = new ContainerRenderBehaviour(m_children);
