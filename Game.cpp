@@ -80,6 +80,12 @@ Game::Game(Context& c, char* mapfile): m_context(c),
   m_level.addChild(hero2);
   m_heroes.push_back(hero2);
 
+  Hero* hero3 = new Hero(m_context, m_level.getData(), "headgear_03", "breastplate_03", "tights_03");
+  hero3->setPosition(21 * m_context.TILE_SIZE, 21 * m_context.TILE_SIZE);
+  hero3->setScale(m_context.DEFAULT_SCALE);
+  hero3->animate(Animations::down);
+  m_level.addChild(hero3);
+  m_heroes.push_back(hero3);
 
   m_level.setPlayers(&m_heroes);
   m_level.setCurrentPlayer(hero1);

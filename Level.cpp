@@ -11,6 +11,8 @@
 #include <queue>
 #include "Utils.h"
 #include "ChangePlayerEvent.h"
+#include <climits>
+#include <algorithm>
 
 point dirs[] = {point(-1, 0), point(0, 1), point(1, 0), point(0, -1)};
 
@@ -361,6 +363,8 @@ void Level::onEvent(const Event& e) {
 void Level::npcTurn() {
   computeScents();
 
+  sortNPCs();
+
   m_current_npc = 0;
   for (int i = 0; i < m_npcs.size(); ++i) {
     Npc* npc = m_npcs.at(i);
@@ -386,6 +390,70 @@ void Level::npcTurn() {
 
   dispatchEvent(new GameEvent(ET::npc_turn_ended), this);
 
+}
+
+class NpcSorter {
+public:
+  NpcSorter(std::vector<point> path): m_path(path) { }
+  bool operator()(Npc* lhs, Npc* rhs) {
+    int index1 = 0;
+    double min1 = UINT_MAX;
+    int index2 = 0;
+    double min2 = UINT_MAX;
+
+    for (int i = 0; i < m_path.size(); ++i) {
+      double diff1 = fabs(m_path.at(i).first - lhs->row()) + fabs(m_path.at(i).second - lhs->col());
+      double diff2 = fabs(m_path.at(i).first - rhs->row()) + fabs(m_path.at(i).second - rhs->col());
+
+      if (diff1 < min1) {
+	min1 = diff1;
+	index1 = i;
+      }
+      if (diff2 < min2) {
+	min2 = diff2;
+	index2 = i;
+      }
+    }
+
+    if (index1 != index2) {
+      return index1 < index2;
+    }
+
+    return lhs->col() < rhs->col();
+    
+  }
+private:
+  std::vector<point> m_path;
+};
+
+
+void Level::sortNPCs() {
+  std::vector<point> path;
+  path.push_back(point(m_players->back()->row(), m_players->back()->col()));
+
+  std::set<point> left;
+
+  for (int i = 0; i < m_players->size() - 1; ++i) {
+    left.insert(point(m_players->at(i)->row(), m_players->at(i)->col()));
+  }
+
+  while (left.size()) {
+    double m = UINT_MAX;
+    point p;
+    point last = path.back();
+    for (std::set<point>::iterator it = left.begin(); it != left.end(); it++) {
+      double diff = fabs(it->first - last.first) + fabs(it->second - last.second);
+      if (diff < m) {
+	m = diff;
+	p = *it;
+      }
+    }
+
+    path.push_back(p);
+    left.erase(p);
+  }
+
+  std::sort(m_npcs.begin(), m_npcs.end(), NpcSorter(path));
 }
 
 void Level::npcCame(GameEventPointer event, EventDispatcher* dispatcher) {

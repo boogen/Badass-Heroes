@@ -37,6 +37,7 @@ class Level : public DisplayObject  {
   void computeScents();
   void npcCame(GameEventPointer, EventDispatcher* dispatcher);
   void onNpcDeath(GameEventPointer e, EventDispatcher* dispatcher);
+  void sortNPCs();
  private:
   std::vector<std::vector<int> > m_data;
   std::vector<std::vector<int> > m_destroyed;

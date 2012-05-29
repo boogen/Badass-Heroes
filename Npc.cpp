@@ -41,9 +41,9 @@ void Npc::stop() {
     }*/
 }
 
-void Npc::die() {
-  animate(Animations::dead, 1);
+void Npc::die() {  
   m_children.at(0)->addEventListener("animationfinish", this, static_cast<Listener>(&Npc::onDeath));
+  animate(Animations::dead, 1);
 }
 
 void Npc::onDeath(GameEventPointer e, EventDispatcher* dispatcher) {

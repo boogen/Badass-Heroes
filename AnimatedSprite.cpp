@@ -57,7 +57,9 @@ void AnimatedSprite::animate(std::string dir, int count) {
   else {
     std::ostringstream msg;
     msg << "Tried to run animation " << dir << ", but there's no such animation in " << m_spritesheet << ".";
-    //    m_context.logger->Error(msg.str());
+    m_context.logger->Error(msg.str());
+    dispatchEvent(new GameEvent("animationfinish"), this);
+
   }
 }
 
@@ -78,6 +80,10 @@ void AnimatedSprite::stop() {
 }
 
 void AnimatedSprite::tick(float dt) {
+  if (m_frames.find(m_direction) == m_frames.end()) {
+    m_context.logger->Error("Tried to animate wrong animation: " + m_direction);
+    return;
+  }
   int current_frame = (m_frame_nr / m_animation_speed) % m_frames.at(m_direction).size();
   int next_frame = ((m_frame_nr + 1) / m_animation_speed) % m_frames.at(m_direction).size();
   if (m_animate && next_frame == 0 && next_frame < current_frame && m_counter > 0) {
@@ -90,6 +96,11 @@ void AnimatedSprite::tick(float dt) {
 }
 
 void AnimatedSprite::render() {
+  if (m_frames.find(m_direction) == m_frames.end()) {
+    m_context.logger->Error("Tried to animate wrong animation: " + m_direction);
+    return;
+  }
+
   int current_frame = (m_frame_nr / m_animation_speed) % m_frames.at(m_direction).size();
   dynamic_cast<SpriteRenderBehaviour*>(m_render_behaviour)->setFrame(m_frames.at(m_direction).at(current_frame));
   Sprite::render();
