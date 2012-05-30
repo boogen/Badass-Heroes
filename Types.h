@@ -23,6 +23,7 @@ class ET {
   static const std::string came;
   static const std::string change_player;
   static const std::string dead;
+  static const std::string spawn;
 };
 
 class SpellType {
@@ -32,6 +33,7 @@ class SpellType {
   static const std::string mind_control;
   static const std::string teleport;
   static const std::string drunk;
+  static const std::string necromancy;
 };
 
 namespace State {

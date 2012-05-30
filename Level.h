@@ -28,6 +28,7 @@ class Level : public DisplayObject  {
   void setPlayers(std::vector<Hero*>* players);
   void npcTurn();
   Character* currentPlayer() const;
+  void render();
  private:
   void initData();
   void moveCamera(float dt);
@@ -37,12 +38,14 @@ class Level : public DisplayObject  {
   void computeScents();
   void npcCame(GameEventPointer, EventDispatcher* dispatcher);
   void onNpcDeath(GameEventPointer e, EventDispatcher* dispatcher);
+  void onSpawn(GameEventPointer e, EventDispatcher* dispatcher);
   void sortNPCs();
  private:
   std::vector<std::vector<int> > m_data;
   std::vector<std::vector<int> > m_destroyed;
   std::map<Keyboard::KEY, bool> m_keys;
   std::vector<Tile*> m_tiles;
+  std::vector<Sprite*> m_darkness;
   int m_level_width;
   int m_level_height;
   Character* m_current_player;

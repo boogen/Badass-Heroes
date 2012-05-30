@@ -22,6 +22,9 @@ class Character : public DisplayObject {
   int health() const;
 
   void setDrunk(bool);
+  void addMinion(Character* minion);
+  Character* getMinionAt(int i);
+  int minionsCount();
  protected:
   std::deque<point>* findPath(int x, int y);
  protected:
@@ -30,6 +33,7 @@ class Character : public DisplayObject {
   std::vector<std::vector<bool> > m_seen;
   std::vector<std::vector<int> > const& m_map;
   int m_health;
+  std::vector<Character*> m_minions;
  private:
   bool addStartToPath(point start, std::deque<point>* path);
   void notifications(float dt);

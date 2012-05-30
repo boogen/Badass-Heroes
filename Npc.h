@@ -14,9 +14,12 @@ class Npc : public Character {
   virtual void stop();
   void die();
   void tick(float dt);
+  void setMinion(bool value);
+  bool turn(std::vector<std::vector<float> > const& scents);
  private:
   void onDeath(GameEventPointer e, EventDispatcher* dispatcher);
-
+ private:
+  bool m_minion;
 };
 
 #endif

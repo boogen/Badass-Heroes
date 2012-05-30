@@ -10,7 +10,6 @@ Tile::Tile(Context const& c, std::string textureName, std::string shadowTexture,
 														       m_map(map),
 														       m_visible(false),
 														       m_shadow(NULL),
-																								   m_darkness(NULL),
 																								   m_destroyed(destroyed),
 																								   m_torch(NULL),
 																								   m_dead(NULL),
@@ -105,10 +104,6 @@ Tile::Tile(Context const& c, std::string textureName, std::string shadowTexture,
   // m_shadow_uvs[0][0][0][0] = std::make_pair(0, 320 / th);
 
 
-  m_darkness = new Sprite(m_context, "darkness.png");
-  m_darkness->setParent(this);
-  m_darkness->setScale(m_context.DEFAULT_SCALE);
-  m_darkness->setZ(1.0f);
 
   if (m_map.at(m_row).at(m_column) == 1 && horizontal() && rand() % 10 == 0) {
     m_torch = new AnimatedSprite(m_context, "torch");
@@ -145,6 +140,18 @@ void Tile::addBones() {
   m_bones->setScale(2);
   m_bones->setParent(this);
   
+}
+
+void Tile::imaliveagain() {
+  if (m_bones) {
+    if (m_bones->parent()) {
+      m_bones->parent()->removeChild(m_bones);
+    }
+    delete m_bones;
+    m_bones = NULL;
+
+    dispatchEvent(new GameEvent(ET::spawn, col(), row()), this);
+  }
 }
 
 void Tile::openChest() {
@@ -260,10 +267,6 @@ bool Tile::map_down() {
 }
 
 
-void Tile::setDarknessOffset(point p) {
-  m_darkness->setPosition(p.first, p.second);
-}
-
 void Tile::setNeighbours(std::vector<Tile*> neighbours) {
   m_neighbours = neighbours;
 }
@@ -311,22 +314,15 @@ void Tile::render() {
     m_chest->render();
   }
 
-  if (!m_visible) {
-    bool onBorder = false;
-    for (int i = 0; i < m_neighbours.size(); ++i) {
-      onBorder = (onBorder || m_neighbours.at(i)->visible());
-    }
+}
 
-    if (onBorder) {
-      m_darkness->setAlpha(0.7f);
-    }
-    else {
-      m_darkness->setAlpha(1.0f);
-    }
-    m_darkness->render();
+bool Tile::onBorder() {
+  bool onBorder = false;
+  for (int i = 0; i < m_neighbours.size(); ++i) {
+    onBorder = (onBorder || m_neighbours.at(i)->visible());
   }
 
-
+  return onBorder;  
 }
 
 void Tile::tick(float dt) {

@@ -72,6 +72,18 @@ void Character::onAction(Action action) {
 
 }
 
+void Character::addMinion(Character* minion) {
+  m_minions.push_back(minion);
+}
+
+Character* Character::getMinionAt(int i) {
+  return m_minions.at(i);
+}
+
+int Character::minionsCount() {
+  return m_minions.size();
+}
+
 void Character::damage(int value) {
   m_health -= value;
 

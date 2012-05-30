@@ -16,7 +16,6 @@ class Tile : public Sprite {
   bool visible() const;
   void setVisible(bool);
   void render();
-  void setDarknessOffset(point p);
   void setNeighbours(std::vector<Tile*> neigbours);
   bool destroyed() const;
   void onDestroy();
@@ -24,6 +23,8 @@ class Tile : public Sprite {
   void openChest();
   void rebuild();
   void addBones();
+  void imaliveagain();
+  bool onBorder();
  private:
   bool up();
   bool right();
@@ -44,7 +45,6 @@ class Tile : public Sprite {
   std::pair<float, float> m_shadow_uvs[2][2][2][2];
   bool m_visible;  
   Sprite* m_shadow;
-  Sprite* m_darkness;
   std::vector<Tile*> m_neighbours;
   std::vector<std::vector<int> > const& m_destroyed;
   Sprite* m_destroyed_left;

@@ -28,6 +28,7 @@ class Game: public EventDispatcher, public IEventReceiver {
   void countFPS(float dt);
   void onNpcTurnEnd(GameEventPointer event, EventDispatcher* dispatcher);
   void onChangePlayer(GameEventPointer event, EventDispatcher* dispatcher);
+  void onSpawnMinion(GameEventPointer event, EventDispatcher* dispatcher);
  private:
   Context& m_context;
   Level m_level;
@@ -44,10 +45,13 @@ class Game: public EventDispatcher, public IEventReceiver {
   Button* m_mind_control_spell;
   Button* m_teleport_spell;
   Button* m_drunk_spell;
+  Button* m_necromancy_spell;
   int m_current_player;
   std::string m_fps_text;
   int m_fps_counter;
   float m_fps_time;
+  std::vector<Button*> m_minions_buttons;
+  DisplayObject* m_bottom_panel;
 };
 
 #endif

@@ -13,6 +13,7 @@
 #include "ChangePlayerEvent.h"
 #include "TeleportSpell.h"
 #include "DrunkSpell.h"
+#include "NecromancySpell.h"
 
 Game::Game(Context& c, char* mapfile): m_context(c),
 				       m_level(m_context),
@@ -60,11 +61,29 @@ Game::Game(Context& c, char* mapfile): m_context(c),
   m_drunk_spell->setParent(&m_hud);
   m_drunk_spell->setZ(1.0f);
 
+  m_necromancy_spell = new Button(m_context, "necromancyspell1.png", "necromancyspell1.png", "necromancyspell2.png", "");
+  m_necromancy_spell->setPosition(18, 358);
+  m_necromancy_spell->setParent(&m_hud);
+  m_necromancy_spell->setZ(1.0f);
+
   m_level.loadFromFile(mapfile);
   m_level.spawnNpcs(50);
 
 
+  m_bottom_panel = new DisplayObject(m_context);
+  m_bottom_panel->setPosition(100, 500);
+  m_bottom_panel->setBounds(new Rectangle(0, 0, m_context.screen_width, m_context.screen_height));
   
+
+  for (int i = 0; i < 8 ;++i) {
+    Button* button = new Button(m_context, "necromancyspell1.png", "necromancyspell1.png", "necromancyspell1.png", "");
+    int index = m_minions_buttons.size();
+    button->setParent(m_bottom_panel);
+    button->setPosition(index * 48, 0);
+    button->setZ(1.0f);
+    m_minions_buttons.push_back(button);
+  }
+
 
   Hero* hero1 = new Hero(m_context, m_level.getData(), "headgear_01", "breastplate_01", "tights_01");
   hero1->setPosition(32.0f * m_context.DEFAULT_SCALE, 32.0f * m_context.DEFAULT_SCALE);
@@ -97,6 +116,11 @@ Game::Game(Context& c, char* mapfile): m_context(c),
 
 
   m_level.addEventListener(ET::change_player, this, static_cast<Listener>(&Game::onChangePlayer));
+  m_level.addEventListener(ET::spawn, this, static_cast<Listener>(&Game::onSpawnMinion));
+
+  for (int i = 0; i < m_heroes.size(); ++i) {
+    m_heroes.at(i)->addEventListener(ET::change_player, this, static_cast<Listener>(&Game::onChangePlayer));
+  }
 
   m_running = true;
     
@@ -140,14 +164,6 @@ void Game::onEvent(const Event& e) {
     m_context.renderer->setSize(m_context.screen_width, m_context.screen_height);
   }
   else if (e.event_type == EventType::KeyDown) {
-    if (e.key_data.key == '1') {
-      m_level.setCurrentPlayer(m_heroes.at(0));
-      m_hud.setAvatar(m_heroes.at(0)->getAvatar());
-    }
-    else if (e.key_data.key == '2') {
-      m_level.setCurrentPlayer(m_heroes.at(1));
-      m_hud.setAvatar(m_heroes.at(1)->getAvatar());
-    }
   }
 
   if (e.event_type == EventType::MouseMoved) {
@@ -247,6 +263,14 @@ void Game::onChangePlayer(GameEventPointer event, EventDispatcher* dispatcher) {
   }
 }
 
+void Game::onSpawnMinion(GameEventPointer event, EventDispatcher* dispatcher) {
+  Character* minion = dynamic_cast<Character*>(dispatcher);
+  if (minion) {
+    m_heroes.at(m_current_player)->addMinion(minion);
+  }
+  
+}
+
 bool Game::button(Button* b) {
   int id = reinterpret_cast<int>(b);
   if (Utils::regionHit(m_context.uistate.mousex, m_context.uistate.mousey, b)) {
@@ -305,6 +329,17 @@ void Game::doGUI() {
 
   if (button(m_drunk_spell)) {
     m_heroes.at(m_current_player)->spell(new DrunkSpell(m_context));
+  }
+
+  if (button(m_necromancy_spell)) {
+    m_heroes.at(m_current_player)->spell(new NecromancySpell(m_context));
+  }
+
+  for (int i = 0; i < m_heroes.at(m_current_player)->minionsCount(); ++i) {
+    if (button(m_minions_buttons.at(i))) {
+      Character* minion = m_heroes.at(m_current_player)->getMinionAt(i);
+      m_level.setCurrentPlayer(minion);
+    }
   }
 
   if (m_context.uistate.mousedown == 0) {

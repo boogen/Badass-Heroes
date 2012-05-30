@@ -10,7 +10,7 @@
 #include <cmath>
 #include "Utils.h"
 #include "Spell.h"
-
+#include "ChangePlayerEvent.h"
 
 
 Hero::Hero(Context const& c, std::vector<std::vector<int> > const& map, std::string headgear, std::string breastplate, std::string pants): Character(c, 30, map),
@@ -146,6 +146,12 @@ void Hero::onEvent(const Event& e) {
     }    
     if (m_state == State::Spell) {
       m_spell->onEvent(e);
+    }
+  }
+  else if (e.event_type == EventType::KeyDown) {
+    int index = e.key_data.key - '1';
+    if (index < m_minions.size()) {
+      dispatchEvent(new ChangePlayerEvent(m_minions.at(index)), this);
     }
   }
 }

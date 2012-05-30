@@ -73,6 +73,13 @@ void Level::initData() {
       tile->setPosition(j * tile->width() * tile->scaleX(), i * tile->height() * tile->scaleY());
       addChild(tile);
       m_tiles.push_back(tile);
+      tile->addEventListener(ET::spawn, this, static_cast<Listener>(&Level::onSpawn));
+
+      Sprite* dark = new Sprite(m_context, "darkness.png");
+      dark->setScale(m_context.DEFAULT_SCALE);
+      dark->setPosition(tile->localX(), tile->localY());
+      dark->setParent(this);
+      m_darkness.push_back(dark);
     }
   }
 
@@ -96,6 +103,35 @@ void Level::initData() {
     }
   }
 
+}
+
+void Level::render() {
+  DisplayObject::render();
+  for (int i = 0; i < m_tiles.size(); ++i) {
+    if (!m_tiles.at(i)->visible()) {
+      if (m_tiles.at(i)->onBorder()) {
+	m_darkness.at(i)->setAlpha(0.7f);
+      }
+      else {
+	m_darkness.at(i)->setAlpha(1.0f);
+      }
+      m_darkness.at(i)->render();
+    }
+  }
+}
+
+void Level::onSpawn(GameEventPointer e, EventDispatcher* dispatcher) {
+  Npc* npc = new Npc(m_context, "skeleton", 1, m_data);
+  npc->addEventListener(ET::dead, this, static_cast<Listener>(&Level::onNpcDeath));
+
+  npc->setPosition(m_context.TILE_SIZE * e->x(), m_context.TILE_SIZE * e->y());
+  npc->animate(Animations::idle);
+  npc->setMinion(true);
+  m_npcs.push_back(npc);
+  addChild(npc);
+
+  dispatchEvent(e, dispatcher);
+  m_current_player->addMinion(npc);
 }
 
 void Level::setPlayers(std::vector<Hero*>* players) {
@@ -273,6 +309,13 @@ void Level::onSpellCasted(GameEventPointer event, EventDispatcher* dispatcher) {
       }
     }
   }
+  else if (e->type() == SpellType::necromancy) {
+    for (int i = 0; i < m_tiles.size(); ++i) {
+      if (m_tiles.at(i)->row() == e->y() && m_tiles.at(i)->col() == e->x()) {
+	m_tiles.at(i)->imaliveagain();	
+      }
+    }
+  }
 }
 
 void Level::onChestOpened(GameEventPointer e, EventDispatcher* dispatcher) {
@@ -369,20 +412,11 @@ void Level::npcTurn() {
   for (int i = 0; i < m_npcs.size(); ++i) {
     Npc* npc = m_npcs.at(i);
     if (m_scents.at(npc->row()).at(npc->col()) > 0) {
-      float max_scent = m_scents.at(npc->row()).at(npc->col());
-      point pos = point(npc->row(), npc->col());
-      for (int j = 0; j < 4; ++j) {
-	if (m_scents.at(npc->row() + dirs[j].first).at(npc->col() + dirs[j].second) > max_scent) {
-	  max_scent = m_scents.at(npc->row() + dirs[j].first).at(npc->col() + dirs[j].second);
-	  pos = point(npc->row() + dirs[j].first, npc->col() + dirs[j].second);
-	}
-      }
-
-      if (pos.first != npc->row() || pos.second != npc->col()) {
+      
+      if (npc->turn(m_scents)) {
 	m_current_player = npc;
 	m_current_npc = i;
 	npc->addEventListener(ET::came, this, static_cast<Listener>(&Level::npcCame));
-	npc->onAction(Action(Action::WALK, point(pos.first, pos.second)));
 	return;
       }
     }
@@ -462,23 +496,15 @@ void Level::npcCame(GameEventPointer event, EventDispatcher* dispatcher) {
   for (int i = m_current_npc + 1; i < m_npcs.size(); ++i) {
     Npc* npc = m_npcs.at(i);
     if (m_scents.at(npc->row()).at(npc->col()) > 0) {
-      float max_scent = m_scents.at(npc->row()).at(npc->col());
-      point pos = point(npc->row(), npc->col());
-      for (int j = 0; j < 4; ++j) {
-	if (m_scents.at(npc->row() + dirs[j].first).at(npc->col() + dirs[j].second) > max_scent) {
-	  max_scent = m_scents.at(npc->row() + dirs[j].first).at(npc->col() + dirs[j].second);
-	  pos = point(npc->row() + dirs[j].first, npc->col() + dirs[j].second);
-	}
-      }
-
-      if (pos.first != npc->row() || pos.second != npc->col()) {
+      
+      if (npc->turn(m_scents)) {
 	m_current_player = npc;
 	m_current_npc = i;
 	npc->addEventListener(ET::came, this, static_cast<Listener>(&Level::npcCame));
-	npc->onAction(Action(Action::WALK, point(pos.first, pos.second)));
 	return;
       }
     }
+
   }
 
 
