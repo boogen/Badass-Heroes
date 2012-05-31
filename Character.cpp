@@ -64,7 +64,6 @@ void Character::onAction(Action action) {
     if (action.type() != Action::WALK && m_path->size() > 1) {
       point p = m_path->back();
       m_path->pop_back();
-      
       m_actions.push_back(Action(Action::WALK, m_path->back()));
     }
     m_actions.push_back(action);
@@ -115,7 +114,6 @@ void Character::tick(float dt) {
 	  m_x = dest.first * m_context.TILE_SIZE;
 	  m_y = dest.second * m_context.TILE_SIZE;
 	  m_path->pop_front();
-       
 	}
 	else {
 	  if (diff.first < 0) {
@@ -130,7 +128,6 @@ void Character::tick(float dt) {
 	  else if (diff.second < 0) {
 	    animate(Animations::up);
 	  }
-	  
 	}
       }
       else {
@@ -203,7 +200,6 @@ bool Character::isMoving() const {
 
 
 void Character::animate(const std::string& dir, int count) {
-  
 }
 
 std::deque<point>* Character::findPath(int x, int y) {
@@ -243,10 +239,7 @@ std::deque<point>* Character::findPath(int x, int y) {
     }
 
   }
-  
   return new std::deque<point>();
-    
-
 }
 
 

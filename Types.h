@@ -34,6 +34,7 @@ class SpellType {
   static const std::string teleport;
   static const std::string drunk;
   static const std::string necromancy;
+  static const std::string fireball;
 };
 
 namespace State {
@@ -55,4 +56,4 @@ class Rectangle {
  Rectangle(float _x, float _y, float _width, float _height):x(_x),y(_y),width(_width),height(_height) {}
 };
 
-#endif 
+#endif

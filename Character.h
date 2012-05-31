@@ -20,7 +20,6 @@ class Character : public DisplayObject {
   void damage(int value);
   ~Character();
   int health() const;
-
   void setDrunk(bool);
   void addMinion(Character* minion);
   Character* getMinionAt(int i);

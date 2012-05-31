@@ -14,6 +14,11 @@
 #include "Npc.h"
 #include "Character.h"
 
+class Level;
+class SpellEvent;
+
+typedef void(Level::*LevelMethod) (SpellEvent*);
+
 class Level : public DisplayObject  {
  public:
   explicit Level(Context const& c);
@@ -40,10 +45,16 @@ class Level : public DisplayObject  {
   void onNpcDeath(GameEventPointer e, EventDispatcher* dispatcher);
   void onSpawn(GameEventPointer e, EventDispatcher* dispatcher);
   void sortNPCs();
+  void magicBullet(SpellEvent* e);
+  void buildWall(SpellEvent* e);
+  void mindControl(SpellEvent* e);
+  void fireball(SpellEvent* e);
+  bool inRangedSpellRange(int spellX, int spellY, int x, int y, int range);
  private:
   std::vector<std::vector<int> > m_data;
   std::vector<std::vector<int> > m_destroyed;
   std::map<Keyboard::KEY, bool> m_keys;
+  std::map<std::string, LevelMethod> m_spell_handlers;
   std::vector<Tile*> m_tiles;
   std::vector<Sprite*> m_darkness;
   int m_level_width;

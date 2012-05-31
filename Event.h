@@ -13,7 +13,7 @@ namespace EventType {
     Resize = 7,
     User = 8
   };
-};
+}
 
 namespace Keyboard {
   enum KEY {
@@ -23,8 +23,7 @@ namespace Keyboard {
     Left = 3,
     S = 4
   };
-};
-
+}
 
 namespace Modifier {
   enum TYPE {
@@ -32,7 +31,7 @@ namespace Modifier {
     Shift = 1,
     Control = 2
   };
-};
+}
 
 namespace MouseButton {
   enum TYPE {
@@ -40,8 +39,7 @@ namespace MouseButton {
     Right = 1,
     Middle = 2
   };
-};
-
+}
 
 struct Event {
   EventType::TYPE event_type;

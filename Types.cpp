@@ -22,3 +22,4 @@ const std::string SpellType::mind_control = "mind_control";
 const std::string SpellType::teleport = "teleport";
 const std::string SpellType::drunk = "drunk";
 const std::string SpellType::necromancy = "necromancy";
+const std::string SpellType::fireball = "fire_ball";
