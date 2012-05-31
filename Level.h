@@ -49,6 +49,9 @@ class Level : public DisplayObject  {
   void buildWall(SpellEvent* e);
   void mindControl(SpellEvent* e);
   void fireball(SpellEvent* e);
+  void teleport(SpellEvent* e);
+  void drunk(SpellEvent* e);
+  void necromancy(SpellEvent* e);
   bool inRangedSpellRange(int spellX, int spellY, int x, int y, int range);
  private:
   std::vector<std::vector<int> > m_data;

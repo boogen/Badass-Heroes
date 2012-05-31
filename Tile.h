@@ -18,7 +18,7 @@ class Tile : public Sprite {
   void render();
   void setNeighbours(std::vector<Tile*> neigbours);
   bool destroyed() const;
-  void onDestroy();
+  bool onDestroy();
   Action action();
   void openChest();
   void rebuild();

@@ -27,6 +27,9 @@ Level::Level(Context const& c): DisplayObject(c),
   m_spell_handlers[SpellType::magic_bullet] = &Level::magicBullet;
   m_spell_handlers[SpellType::build_wall] = &Level::buildWall;
   m_spell_handlers[SpellType::mind_control] = &Level::mindControl;
+  m_spell_handlers[SpellType::teleport] = &Level::teleport;
+  m_spell_handlers[SpellType::drunk] = &Level::drunk;
+  m_spell_handlers[SpellType::necromancy] = &Level::necromancy;
 
 
   m_render_behaviour = new ContainerRenderBehaviour(m_children);
@@ -347,30 +350,11 @@ void Level::mindControl(SpellEvent* e) {
     }
 }
 
-void Level::onSpellCasted(GameEventPointer event, EventDispatcher* dispatcher) {
-    SpellEvent* e = dynamic_cast<SpellEvent*>(event.get());
-    if (e == NULL) {
-        m_context.logger->Error("LEVEL.CPP: upcasting spell event failed.");
-        return;
-    }
-    (this->*m_spell_handlers[e->type()])(e);
+void Level::teleport(SpellEvent* e) {
+    m_current_player->setPosition(e->x() * m_context.TILE_SIZE, e->y() * m_context.TILE_SIZE);
 }
 
-
-
-/*
-
-void Level::onSpellCasted(GameEventPointer event, EventDispatcher* dispatcher) {
-  SpellEvent* e = dynamic_cast<SpellEvent*>(event.get());
-  if (e == NULL) {
-    m_context.logger->Error("LEVEL.CPP: upcasting spell event failed.");
-    return;
-  }
-
-  else if (e->type() == SpellType::teleport) {
-    m_current_player->setPosition(e->x() * m_context.TILE_SIZE, e->y() * m_context.TILE_SIZE);
-  }
-  else if (e->type() == SpellType::drunk) {
+void Level::drunk(SpellEvent* e) {
     for (int i = 0; i < m_npcs.size(); ++i) {
       if (m_npcs.at(i)->row() == e->y() && m_npcs.at(i)->col() == e->x()) {
 	m_npcs.at(i)->setDrunk(true);
@@ -382,16 +366,27 @@ void Level::onSpellCasted(GameEventPointer event, EventDispatcher* dispatcher) {
 	m_players->at(i)->setDrunk(true);
       }
     }
-  }
-  else if (e->type() == SpellType::necromancy) {
+  
+}
+
+void Level::necromancy(SpellEvent* e) {
     for (int i = 0; i < m_tiles.size(); ++i) {
       if (m_tiles.at(i)->row() == e->y() && m_tiles.at(i)->col() == e->x()) {
 	m_tiles.at(i)->imaliveagain();	
       }
     }
-  }
 }
-*/
+
+void Level::onSpellCasted(GameEventPointer event, EventDispatcher* dispatcher) {
+    SpellEvent* e = dynamic_cast<SpellEvent*>(event.get());
+    if (e == NULL) {
+        m_context.logger->Error("LEVEL.CPP: upcasting spell event failed.");
+        return;
+    }
+    (this->*m_spell_handlers[e->type()])(e);
+}
+
+
 void Level::onChestOpened(GameEventPointer e, EventDispatcher* dispatcher) {
   for (int i = 0; i < m_tiles.size(); ++i) {
     if (m_tiles.at(i)->row() == e->x() && m_tiles.at(i)->col() == e->y()) {

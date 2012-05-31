@@ -349,7 +349,11 @@ void Tile::tick(float dt) {
 
 }
 
-void Tile::onDestroy() {
+bool Tile::onDestroy() {
+  if (onBorder()) {
+    return false;
+  }
+
   m_up = 1;
   m_right = 1;
   m_down = 1;
@@ -361,6 +365,8 @@ void Tile::onDestroy() {
   dead->setParent(this);
   m_dead = dead;
   m_dead->addEventListener("animationfinish", this, static_cast<Listener>(&Tile::onDestroyed));
+
+  return true;
 }
 
 void Tile::onDestroyed(GameEventPointer e, EventDispatcher* dispatcher) {
